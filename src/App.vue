@@ -45,17 +45,21 @@
                         if (project.Category == filters.category) {
                             filtered.push(feature);
                         }
-                    } else if (filters.suburb != '' && filters.suburb != null) {
+                    } if (filters.suburb != '' && filters.suburb != null) {
                         if (filters.suburb.indexOf(project.Suburb) !== -1) {
                             filtered.push(feature);
                         }
-                    } else if (filters.ownership != '' && filters.ownership != null && !filters.showAll) {
+                    } if (filters.ownership != '' && filters.ownership != null && !filters.showAll) {
                         if (project.Ownership == filters.ownership) {
                             filtered.push(feature);
                         }
-                    } else {
-                        filtered.push(feature);
-                    }
+                    } if (filters.pValue != '' && filters.pValue != null) {
+                        let min = filters.pValue[0];
+                        let max = filters.pValue[1];
+                        if (project.Value >= min && project.Value <= max) {
+                            filtered.push(feature);
+                        }
+                    } 
 
                 }
                 var filteredJson = {

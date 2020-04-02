@@ -1,6 +1,6 @@
 <template>
     <aside :class="{ active: active}" >
-        <h3>Property Map</h3>
+        <h3 class="sidehdr">Property Map</h3>
         <div>
             <p>Suburb:</p>
             <SelectMultibox :items="suburbs" selectId="suburb" v-on:suburbChanged="onSuburbsChanged" />
@@ -13,7 +13,15 @@
             <hr />
             <p>Ownership:</p>
             <a-switch :disabled="switchDisabled" defaultChecked @change="onOwnershipChanged" /> <span class="ownershipLbl">{{ownership}}</span><br /><br />
-            <a-checkbox :checked="showAll"  @change="onShowAllChanged"> Ignore Ownership Filter Above and Show All Properties</a-checkbox>
+            <a-checkbox :checked="showAll" @change="onShowAllChanged"> Ignore Ownership Filter Above and Show All Properties</a-checkbox>
+            <hr />
+            <p>Property Value:</p>
+            <a-slider range
+                                       :step="100"
+                                       :max="50000"
+                                       :defaultValue="[5000, 15000]"
+                                       @change="pValueChanged"
+                                       @afterChange="onAfterPValueChange" />
         </div>
     </aside>
 </template>
@@ -31,6 +39,7 @@
                 endDateTo: '',
                 category: '',
                 suburb: '',
+                pValue:'',
                 ownership: 'PRIVATE',
                 showAll: true,
                 subCategory: '',
@@ -80,6 +89,14 @@
                 console.log('in sidebar .. suburb = ', this.suburb );
                 this.emitToParent();
             },
+            pValueChanged(value) {
+                console.log('pValueChanged: ', value);
+            },
+            onAfterPValueChange(value) {
+                console.log('onAfterPValueChange: ', value);
+                this.pValue = value;
+                this.emitToParent();
+            },
             onOwnershipChanged(checked) {
                 console.log(`onOwnershipChanged to ${checked}`);
                 if (checked) {
@@ -112,6 +129,7 @@
                     "suburb": this.suburb,
                     "ownership": this.ownership,
                     "showAll": this.showAll,
+                    "pValue": this.pValue,
                 };
                 this.$emit('filterValueChanged', filterJson);
             }
@@ -162,7 +180,11 @@
         color: #42b983;
         border-bottom: 1px solid #bbb;
     }
-
+    h3.sidehdr {
+        padding: 5px 10px;
+        background: darkcyan;color:white;
+        margin-bottom:40px;
+    }
     a:hover{
         text-decoration:none;
     }

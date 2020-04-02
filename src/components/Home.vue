@@ -11,7 +11,7 @@
         <mapbox :geoJson="geoJson" :key="componentKey"
                 access-token="pk.eyJ1IjoidHVzZXIzNzgiLCJhIjoiY2s4Z3cyZHdiMDNjbDNldW4wNjVoMW5kNCJ9.LpYqTBtS_EHkCnzx_oYIFQ"
                 :map-options="{
-                style: 'mapbox://styles/mapbox/light-v9',
+                style: 'mapbox://styles/mapbox/streets-v11',
                 center: [151.209152, -33.875305],
                 zoom: 14,
             }"
@@ -119,7 +119,8 @@
                 map.getCanvas().style.cursor = ''
             },
             toggleNav() {
-                this.$parent.$emit('toggleNav')
+                this.$parent.$emit('toggleNav');
+                this.componentKey += 1;  
             },
             handleOk(e) {
                 console.log(e);
@@ -142,13 +143,16 @@
     }
     #map {
         width: 100%;
-        height: 100%;
-        overflow: hidden;
+        height: 100vh;
+        
     }
     header {
         width: 100%;
         padding: 10px;
-        background: #aaa;
+        background: rgba(128,128,128,0.5);
+        text-align: left;
+        position: absolute;
+        z-index: 1000;
         text-align: left;
     }
 
