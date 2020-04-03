@@ -7,7 +7,8 @@
                              style="width: 100%"
                              placeholder="Search by Title"
                              :filterOption="filterOption"
-                             @select="titleSelected" />
+                             @select="titleSelected"
+                             @search="titleChanged"/>
             <hr/>
             <p>Suburb:</p>
             <SelectMultibox :items="suburbs" selectId="suburb" v-on:suburbChanged="onSuburbsChanged" />
@@ -137,6 +138,10 @@
                 );
             },
             titleSelected(value) {
+                this.title = value;
+                this.emitToParent();
+            },
+            titleChanged(value) {
                 this.title = value;
                 this.emitToParent();
             },
