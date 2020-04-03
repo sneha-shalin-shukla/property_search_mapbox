@@ -2,6 +2,13 @@
     <aside :class="{ active: active}" >
         <h3 class="sidehdr">Property Map</h3>
         <div>
+            <p>Search by Title:</p>
+            <a-auto-complete :dataSource="titleData"
+                             style="width: 100%"
+                             placeholder="Search by Title"
+                             :filterOption="filterOption"
+                             @select="titleSelected" />
+            <hr/>
             <p>Suburb:</p>
             <SelectMultibox :items="suburbs" selectId="suburb" v-on:suburbChanged="onSuburbsChanged" />
             <hr />
@@ -17,11 +24,13 @@
             <hr />
             <p>Property Value:</p>
             <a-slider range
-                                       :step="100"
-                                       :max="50000"
-                                       :defaultValue="[5000, 15000]"
-                                       @change="pValueChanged"
-                                       @afterChange="onAfterPValueChange" />
+                      :step="100"
+                      :max="50000"
+                      :defaultValue="[5000, 15000]"
+                      @change="pValueChanged"
+                      @afterChange="onAfterPValueChange" />
+            <hr />
+
         </div>
     </aside>
 </template>
@@ -43,6 +52,7 @@
                 ownership: 'PRIVATE',
                 showAll: true,
                 subCategory: '',
+                title:'',
             }
         },
         props: {
@@ -58,6 +68,10 @@
                 type: Array,
                 required: true
             },
+            titleData: {
+                type: Array,
+                required: true
+            }
         },
         methods: {
             // Triggered when `childToParent` event is emitted by the child.
@@ -117,6 +131,15 @@
                 }
                 this.emitToParent();
             },
+            filterOption(input, option) {
+                return (
+                    option.componentOptions.children[0].text.toUpperCase().indexOf(input.toUpperCase()) >= 0
+                );
+            },
+            titleSelected(value) {
+                this.title = value;
+                this.emitToParent();
+            },
             emitToParent() {
                 console.log('will emit to App Lavel to filter GeoJson');
                 var filterJson = {
@@ -130,6 +153,7 @@
                     "ownership": this.ownership,
                     "showAll": this.showAll,
                     "pValue": this.pValue,
+                    "title": this.title
                 };
                 this.$emit('filterValueChanged', filterJson);
             }

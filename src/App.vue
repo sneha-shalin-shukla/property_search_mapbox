@@ -4,7 +4,9 @@
                  v-on:categoryValueChange="onCategoryValueChange"
                  :categories="categories"
                  :subCategories="subCategories" 
-                 :suburbs="suburbs" />
+                 :suburbs="suburbs" 
+                 :titleData="titleData"
+                 />
         <Home :geoJson="myJson" ref="mapView" />
     </div>
 </template>
@@ -27,6 +29,7 @@
                 categories: [],
                 subCategories: [],
                 suburbs: [],
+                titleData: [],
             }
         },
         methods: {
@@ -37,41 +40,34 @@
                 var features = this.originalJson.features;
                 var filtered = [];
                 console.log("Features Length = ", features.length);
-                var filteredIDs = [];
+                
                 var filteredRecs = [];
                 for (let i = 0; i < features.length; i++) {
                     var feature = features[i];
                     var project = feature.properties.project;
                     // console.log("Project : ", project);
                     var toAdd = true;
+                    if (filters.title != '' && filters.title != null) {
+                        if (project.Title != filters.title) {
+                            toAdd = false;
+                        }
+                    }
                     if (filters.category != '' && filters.category != null) {
-                        if (project.Category == filters.category) {
-                            filteredIDs.push(project.id);
-                            filtered.push(feature);
-                        } else {
+                        if (project.Category != filters.category) {
                             toAdd = false;
                         }
                     } if (filters.suburb != '' && filters.suburb != null) {
-                        if (filters.suburb.indexOf(project.Suburb) !== -1) {
-                            filteredIDs.push(project.id);
-                            filtered.push(feature);
-                        } else {
+                        if (filters.suburb.indexOf(project.Suburb) === -1) {
                             toAdd = false;
                         }
                     } if (filters.ownership != '' && filters.ownership != null && !filters.showAll) {
-                        if (project.Ownership == filters.ownership) {
-                            filteredIDs.push(project.id);
-                            filtered.push(feature);
-                        } else {
+                        if (project.Ownership != filters.ownership) {
                             toAdd = false;
                         }
                     } if (filters.pValue != '' && filters.pValue != null) {
                         let min = filters.pValue[0];
                         let max = filters.pValue[1];
                         if (project.Value >= min && project.Value <= max) {
-                            filteredIDs.push(project.id);
-                            filtered.push(feature);
-                        } else {
                             toAdd = false;
                         }
                     }
@@ -115,7 +111,6 @@
                 }
                 this.categories = uniqueNames;
                 console.log("Categories For Dropdown = ", uniqueNames);
-
             },
             getSubCategorties(category = '') {
                 console.log("will get sub categories for = ", category);
@@ -130,11 +125,23 @@
                 }
                 this.subCategories = uniqueNames;
                 console.log("subCategories For Dropdown = ", uniqueNames);
-            }
+            },
+            getTitles() {
+                var uniqueNames = [];
+                var data = this.originalJson.features;
+                for (let i = 0; i < data.length; i++) {
+                    if (uniqueNames.indexOf(data[i].properties.project.Title) === -1) {
+                        uniqueNames.push(data[i].properties.project.Title);
+                    }
+                }
+                this.titleData = uniqueNames;
+                console.log("titleData For Dropdown = ", uniqueNames);
+            },
         },
         created() {
             this.getCategorties();
             this.getSuburbs();
+            this.getTitles();
         }
     };
 </script>
