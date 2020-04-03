@@ -37,36 +37,57 @@
                 var features = this.originalJson.features;
                 var filtered = [];
                 console.log("Features Length = ", features.length);
+                var filteredIDs = [];
+                var filteredRecs = [];
                 for (let i = 0; i < features.length; i++) {
                     var feature = features[i];
                     var project = feature.properties.project;
                     // console.log("Project : ", project);
+                    var toAdd = true;
                     if (filters.category != '' && filters.category != null) {
                         if (project.Category == filters.category) {
+                            filteredIDs.push(project.id);
                             filtered.push(feature);
+                        } else {
+                            toAdd = false;
                         }
                     } if (filters.suburb != '' && filters.suburb != null) {
                         if (filters.suburb.indexOf(project.Suburb) !== -1) {
+                            filteredIDs.push(project.id);
                             filtered.push(feature);
+                        } else {
+                            toAdd = false;
                         }
                     } if (filters.ownership != '' && filters.ownership != null && !filters.showAll) {
                         if (project.Ownership == filters.ownership) {
+                            filteredIDs.push(project.id);
                             filtered.push(feature);
+                        } else {
+                            toAdd = false;
                         }
                     } if (filters.pValue != '' && filters.pValue != null) {
                         let min = filters.pValue[0];
                         let max = filters.pValue[1];
                         if (project.Value >= min && project.Value <= max) {
+                            filteredIDs.push(project.id);
                             filtered.push(feature);
+                        } else {
+                            toAdd = false;
                         }
-                    } 
+                    }
+                    if (toAdd) {
+                        filteredRecs.push(feature);
+                    }
 
                 }
                 var filteredJson = {
                     "type": "FeatureCollection",
-                    "features": filtered
+                    "features": filteredRecs
                 }
-                console.log("filtered Json = ", filteredJson);
+                console.log("filtered Json = ", filtered);
+                console.log("filtered Length = ", filtered.length);
+                console.log("filteredRecs Json = ", filteredRecs);
+                console.log("filteredRecs Length = ", filteredRecs.length);
                 this.myJson = filteredJson;
             },
             onCategoryValueChange(category) {

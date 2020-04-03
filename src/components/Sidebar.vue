@@ -39,7 +39,7 @@
                 endDateTo: '',
                 category: '',
                 suburb: '',
-                pValue:'',
+                pValue: [5000, 15000],
                 ownership: 'PRIVATE',
                 showAll: true,
                 subCategory: '',
@@ -140,6 +140,7 @@
                 console.log('received')
                 this.active = !this.active
             })
+            this.emitToParent();
         }
     }
 </script>

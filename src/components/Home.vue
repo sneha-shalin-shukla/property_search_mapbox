@@ -7,6 +7,7 @@
         </header>
         <a-modal :title="featureTitle" v-model="visible" @ok="handleOk">
             {{featuredetail}}
+           
         </a-modal>
         <mapbox :geoJson="geoJson" :key="componentKey"
                 access-token="pk.eyJ1IjoidHVzZXIzNzgiLCJhIjoiY2s4Z3cyZHdiMDNjbDNldW4wNjVoMW5kNCJ9.LpYqTBtS_EHkCnzx_oYIFQ"
@@ -98,8 +99,11 @@
                     }
 
                     this.visible = true;
-                    this.featureTitle = e.features[0].properties.project.Title;
                     this.featuredetail = e.features[0].properties.project;
+                   // let project = JSON.parse(e.features[0].properties.project);
+                    this.featureTitle = '';
+                    //console.log("Title = ", JSON.parse(project));
+                    
                     /*
                     new mapboxgl.Popup()
                         .setLngLat({ lng: coordinates[0], lat: coordinates[1] })
